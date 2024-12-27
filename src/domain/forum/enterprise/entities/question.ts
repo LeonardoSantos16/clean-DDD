@@ -1,20 +1,21 @@
-/* eslint-disable @typescript-eslint/adjacent-overload-signatures */
-import { Slug } from './value-objects/slug'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
+import { Slug } from './value-objects/slug'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
-import { QuestionAttachment } from './question-attachment'
 import dayjs from 'dayjs'
+import { QuestionAttachment } from './question-attachment'
+
 export interface QuestionProps {
   authorId: UniqueEntityID
   bestAnswerId?: UniqueEntityID
   title: string
   content: string
   slug: Slug
+  attachments: QuestionAttachment[]
   createdAt: Date
   updatedAt?: Date
-  attachments: QuestionAttachment[]
 }
+
 export class Question extends AggregateRoot<QuestionProps> {
   get authorId() {
     return this.props.authorId
@@ -63,6 +64,7 @@ export class Question extends AggregateRoot<QuestionProps> {
   set title(title: string) {
     this.props.title = title
     this.props.slug = Slug.createFromText(title)
+
     this.touch()
   }
 
@@ -93,6 +95,7 @@ export class Question extends AggregateRoot<QuestionProps> {
       },
       id,
     )
+
     return question
   }
 }
